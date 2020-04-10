@@ -102,14 +102,14 @@ VALUES
 
 INSERT INTO table2 (empno, ename,    job,    MGR,   Hiredate,    sal,   comm, deptno)
 VALUES
-(17061725, shiliwei, "CLERK", 7782, "1999-01-15", NULL, NULL, 10)
+(17061725, 'shiliwei', "CLERK", 7782, "1999-01-15", NULL, NULL, 10)
 ```
 
 3.2 表中入职时间（Hiredate字段）最短的人。
 ```
 SELECT t2.ename
 FROM table2 t2
-WHERE t2.Hiredate >= all(SELECT Hiredate FROM t2)
+WHERE t2.Hiredate >= all(SELECT Hiredate FROM t2))
 ```
 
 3.3 有几种职位（job字段）？在关系代数中，本操作是什么运算？
