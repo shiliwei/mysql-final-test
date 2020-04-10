@@ -2,9 +2,9 @@
 
 2019-2020 mysql final test
 
-姓名：
+姓名：石力玮		
 
-学号：
+学号：17061725
 
 说明1：考试为开卷，可以上网，自觉不要相互电话和QQ；
 
@@ -16,6 +16,15 @@
 
 
 1 打印当前时间（例如 2020-04-07 13:41:42），写出SQL语句和结果
+```
+mysql> select curdate();
++------------+
+| curdate()  |
++------------+
+| 2020-04-10 |
++------------+
+1 row in set (0.02 sec)
+```
 
 2 组合打印自己的姓名和学号
 
@@ -25,11 +34,17 @@
 
 表1：其中deptno为主键
 ```
-deptno, deptno,    loc
+deptno, dename, loc
 (10, "ACCOUNTING", "NEW YORK"),
 (20, "RESEARCH", "DALLAS"),
 (30, "SALES", "CHICAGO"),
 (40, "OPERATIONS", "BOSTON")
+```
+
+```
+mysql> create table t1(deptno int,dename varchar(50),loc varchar(50));
+Query OK, 0 rows affected (0.03 sec)
+mysql> insert into t1(deptno, dename, loc) values(10, "ACCOUNTING", "NEW YORK"),(20, "RESEARCH", "DALLAS"),(30, "SALES", "CHICAGO"),(40, "OPERATIONS", "BOSTON");
 ```
 
 表2：其中empno字段为主键
@@ -49,7 +64,12 @@ deptno, deptno,    loc
 	(7902, "FORD", "ANALYST", 7566, "1981-03-12", 3000, NULL, 20),
 	(7934, "MILLER", "CLERK", 7782, "1981-03-12", 1300, NULL, 10)
 ```
-
+```
+mysql> mysql> create table t2(empno varchar(50), ename varchar(50),job varchar(50),MGR varchar(50),Hiredate varchar(50),sal varchar(50),comm varchar(50), deptno varchar(50));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'mysql> create table t2(empno varchar(50), ename varchar(50),job varchar(50),MGR ' at line 1
+mysql> create table t2(empno varchar(50),ename varchar(50),job varchar(50),MGR varchar(50),Hiredate varchar(50),sal varchar(50),comm varchar(50), deptno varchar(50));
+Query OK, 0 rows affected (0.02 sec)
+```
 3.1 表2 中再插入一条记录：
 
 `(你的学号，你的姓名或者拼音， “CLERK”, 7782, 你的生日,  NULL, NULL, 10)`
@@ -77,25 +97,41 @@ deptno, deptno,    loc
 3.11 撰写一个函数 get_deptno_from_empno，输入 empno，输出对应的 deptno。 简述函数和存储过程有什么不同。
 
 4 建立一个新用户，账号为自己的姓名拼音，密码为自己的学号；
+```
+mysql>  GRANT USAGE ON *.* TO 'shiliwei'@'localhost' IDENTIFIED BY '17061725' WITH GRANT OPTION;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+```
 
 4.1 将表1的SELECT, INSERT, UPDATE(ename)权限赋给该账号。
+grant select on t1 to shiliwei ;
 
 4.2 显示该账号权限
+mysql> show grants for 'shiliwei'@'host';
 
 4.3 `with grant option` 是什么意思。
+表示该用户可以将自己拥有的权限授权给别人。
 
 5 表 1 和表 2 这样设计是否符合第一范式，是否符合第二范式，为什么？
+不符合。数据库表中不存在非关键字段对任一候选关键字段的部度分函数依赖。
 
 6 画出表 1 和表 2 所对应的 E-R 图
 
 7 什么是外模式，什么是内模式。为什么要分成这几层？
+外模式又称子模式，对应于用户级。它是某个或某几个用户所看到的数据库的数据视图，是与某一应用有关的数据的逻辑表示。外模式是从模式导出的一个子集，包含模式中允许特定用户使用的那部分数据。
+
+内模式又称存储模式，对应于物理级，它是数据库中全体数据的内部表示或底层描述，是数据库最低一级的逻辑描述，它描述了数据在存储介质上的存储方式翱物理结构，对应着实际存储在外存储介质上的数据库。内模式由内模式描述语言来描述、定义，它是数据库的存储观。
 
 8 什么是ACID？
+ACID，是指在可靠数据库管理系统（DBMS）中，事务(transaction)所应该具有的四个特性：原子性 一致性 隔离性 持久性
 
 8.1 编写一个事务，“将 MILLER 的 comm 增加 100，如果增加后的 comm 大于 1000 则回滚”；
 
 8.2 如何查看 MySQL 当前的隔离级别？
+通过命令 set session transaction isolation level 可以设置本次会话的事务隔离级别
 
 8.3 如果隔离级别为 READ-UNCOMMITED, 完成 “MILLER 的 comm 增加 100” 事务操作完成后，可能读到的结果有哪些，原因是什么？
 
 9 有哪些场景不适合用关系型数据库？为什么？
+1.图片，文件，二进制数据
+2.短生命期数据
+3.日志文件
